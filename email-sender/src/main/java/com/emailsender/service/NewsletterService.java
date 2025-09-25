@@ -1,1 +1,39 @@
-package com.emailsender.service;import jakarta.mail.MessagingException;import jakarta.mail.internet.MimeMessage;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.core.io.ClassPathResource;import org.springframework.mail.javamail.JavaMailSender;import org.springframework.mail.javamail.MimeMessageHelper;import org.springframework.stereotype.Service;import java.io.IOException;import java.nio.file.Files;import java.util.List;@Servicepublic class NewsletterService {    @Autowired    private JavaMailSender mailSender;    public void sendNewsletter(List<String> recipients, String subject) throws MessagingException, IOException {        // Load HTML template        ClassPathResource resource = new ClassPathResource("templates/newsletter.html");        String htmlContent = Files.readString(resource.getFile().toPath());        for (String email : recipients) {            MimeMessage message = mailSender.createMimeMessage();            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");            helper.setFrom("meherharshal924@gmail.com");            helper.setTo(email);            helper.setSubject(subject);            helper.setText(htmlContent, true);            mailSender.send(message);            System.out.println("Newsletter sent to: " + email);        }    }}
+package com.emailsender.service;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+
+@Service
+public class NewsletterService {
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    public void sendNewsletter(List<String> recipients, String subject) throws MessagingException, IOException {
+        // Load HTML template
+        ClassPathResource resource = new ClassPathResource("templates/newsletter.html");
+        String htmlContent = Files.readString(resource.getFile().toPath());
+
+        for (String email : recipients) {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom("YourEmail@gmail.com");
+            helper.setTo(email);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+            System.out.println("Newsletter sent to: " + email);
+        }
+    }
+}
